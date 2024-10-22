@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String   @unique
+  password  String
+  role      String
+  phone     String   // Add phone field
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model Event {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  date        DateTime
+  chefDetails String
+  price       Float
+  seatsAvailable Int
+  totalSeats  Int
+  createdBy   String   @db.ObjectId
+  promotions  String[]
+}
+
+model Booking {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  eventId   String   @db.ObjectId
+  seatsBooked Int
+  user      String
+  totalPrice Float
+  status    String
+  createdAt DateTime @default(now())
+}
+
+model Feedback {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  eventId   String   @db.ObjectId
+  rating    Int
+  comments  String
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  USER
+  ADMIN
+  MANAGER
+}
